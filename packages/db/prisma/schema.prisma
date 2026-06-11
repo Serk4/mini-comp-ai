@@ -1,0 +1,35 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model EvidenceRequest {
+  id        Int             @id @default(autoincrement())
+  rawText   String
+  status    String          @default("pending")
+  createdAt DateTime        @default(now())
+  result    EvidenceResult?
+}
+
+model EvidenceResult {
+  id                  Int      @id @default(autoincrement())
+  requestId           Int      @unique
+  summary             String
+  recommendedControls Json
+  missingEvidence     Json
+  createdAt           DateTime @default(now())
+
+  request EvidenceRequest @relation(fields: [requestId], references: [id])
+}
+
+model AuditControl {
+  id          Int      @id @default(autoincrement())
+  framework   String
+  controlId   String
+  description String
+}

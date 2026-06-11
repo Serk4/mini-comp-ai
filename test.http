@@ -1,0 +1,6 @@
+POST http://localhost:3001/evidence-request
+Content-Type: application/json
+
+{
+  "rawText": "User uploaded SOC 2 evidence for access control but missing MFA logs."
+}
