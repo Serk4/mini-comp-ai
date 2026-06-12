@@ -7,9 +7,15 @@ export class EvidenceRequestController {
   constructor(private readonly service: EvidenceRequestService) {}
 
   @Post()
-  create(@Body() dto: CreateEvidenceRequestDto) {
-    return this.service.processEvidenceRequest(dto.rawText);
+  async create(@Body() dto: CreateEvidenceRequestDto) {
+    const { request } = await this.service.processEvidenceRequest(dto.rawText);
+    return request;
   }
+
+  // @Post()
+  // create(@Body() dto: CreateEvidenceRequestDto) {
+  //   return this.service.processEvidenceRequest(dto.rawText);
+  // }
 
   @Get()
   findAll() {
@@ -18,6 +24,6 @@ export class EvidenceRequestController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.service.findOne(Number(id));
+    return this.service.findOne(Number(+id));
   }
 }

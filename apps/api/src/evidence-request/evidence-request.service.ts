@@ -18,9 +18,10 @@ export class EvidenceRequestService {
 
   constructor(private readonly prisma: PrismaService) {}
 
-  async processEvidenceRequest(
-    rawText: string
-  ): Promise<{ request: EvidenceRequest; result: EvidenceResult }> {
+  async processEvidenceRequest(rawText: string): Promise<{ 
+      request: EvidenceRequest; 
+      result: EvidenceResult 
+    }> {
     // 1. Save request
     const request = await this.prisma.evidenceRequest.create({
       data: { rawText },
