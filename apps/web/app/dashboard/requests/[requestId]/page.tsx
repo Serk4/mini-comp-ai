@@ -40,9 +40,6 @@ export default function RequestDetailPage({
   useEffect(() => {
     let isActive = true;
 
-    setIsLoadingRequest(true);
-    setErrorMessage(null);
-
     getRequest(requestId)
       .then((data: EvidenceRequest) => {
         if (isActive) {
