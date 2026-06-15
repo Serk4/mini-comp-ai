@@ -24,7 +24,7 @@ export class EvidenceRequestController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.service.findOne(Number(+id));
+    return this.service.findOne(Number(id));
   }
 
   @Patch(':id/status')
@@ -32,6 +32,6 @@ export class EvidenceRequestController {
     @Param('id') id: string,
     @Body() body: { status: string },
   ) {
-    return this.service.updateStatus(Number(+id), body.status);
+    return this.service.updateStatus(Number(id), body.status);
   }
 }

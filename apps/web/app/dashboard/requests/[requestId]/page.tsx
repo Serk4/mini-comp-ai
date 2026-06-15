@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 
 interface EvidenceRequest {
   id: number;
@@ -25,12 +25,9 @@ async function getRequest(id: string) {
   return res.json();
 }
 
-export default function RequestDetailPage({
-  params,
-}: {
-  params: { requestId: string };
-}) {
-  const { requestId } = params;
+export default function RequestDetailPage() {
+  const params = useParams<{ requestId: string }>();
+  const requestId = params.requestId;
   const router = useRouter();
   const [request, setRequest] = useState<EvidenceRequest | null>(null);
   const [isLoadingRequest, setIsLoadingRequest] = useState(true);
