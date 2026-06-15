@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import Groq from 'groq-sdk';
 import { EvidenceRequest, EvidenceResult } from '@prisma/client';
@@ -93,6 +93,26 @@ Do not include explanations, commentary, markdown, or code fences.
   findOne(id: number) {
     return this.prisma.evidenceRequest.findUnique({
       where: { id },
+      include: { result: true },
+    });
+  }
+
+  async updateStatus(id: number, status: string) {
+    if (status !== 'completed') {
+      throw new BadRequestException('Only "completed" status is supported');
+    }
+
+    const request = await this.prisma.evidenceRequest.findUnique({
+      where: { id },
+    });
+
+    if (!request) {
+      throw new NotFoundException(`Evidence request ${id} not found`);
+    }
+
+    return this.prisma.evidenceRequest.update({
+      where: { id },
+      data: { status },
       include: { result: true },
     });
   }
