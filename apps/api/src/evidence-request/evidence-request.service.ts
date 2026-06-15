@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import Groq from 'groq-sdk';
 import { EvidenceRequest, EvidenceResult } from '@prisma/client';
@@ -18,10 +18,10 @@ export class EvidenceRequestService {
 
   constructor(private readonly prisma: PrismaService) {}
 
-  async processEvidenceRequest(rawText: string): Promise<{ 
-      request: EvidenceRequest; 
-      result: EvidenceResult 
-    }> {
+  async processEvidenceRequest(rawText: string): Promise<{
+    request: EvidenceRequest;
+    result: EvidenceResult;
+  }> {
     // 1. Save request
     const request = await this.prisma.evidenceRequest.create({
       data: { rawText },
@@ -32,7 +32,7 @@ export class EvidenceRequestService {
 
     // 3. Build prompt
     // prettier-ignore
-const prompt = dedent(`
+    const prompt = dedent(`
 You are a compliance analyst. Analyze the following evidence text:
 
 "${rawText}"
@@ -53,7 +53,6 @@ Return ONLY valid JSON with this shape:
 
 Do not include explanations, commentary, markdown, or code fences.
 `);
-
 
     // 4. Call Groq
     const aiResponse = await this.groq.chat.completions.create({
@@ -94,6 +93,26 @@ Do not include explanations, commentary, markdown, or code fences.
   findOne(id: number) {
     return this.prisma.evidenceRequest.findUnique({
       where: { id },
+      include: { result: true },
+    });
+  }
+
+  async updateStatus(id: number, status: 'completed') {
+    if (status !== 'completed') {
+      throw new BadRequestException('Only "completed" status is supported');
+    }
+
+    const request = await this.prisma.evidenceRequest.findUnique({
+      where: { id },
+    });
+
+    if (!request) {
+      throw new NotFoundException(`Evidence request ${id} not found`);
+    }
+
+    return this.prisma.evidenceRequest.update({
+      where: { id },
+      data: { status },
       include: { result: true },
     });
   }

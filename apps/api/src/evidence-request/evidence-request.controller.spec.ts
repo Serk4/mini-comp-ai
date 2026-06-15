@@ -9,7 +9,9 @@ describe('EvidenceRequestController', () => {
       controllers: [EvidenceRequestController],
     }).compile();
 
-    controller = module.get<EvidenceRequestController>(EvidenceRequestController);
+    controller = module.get<EvidenceRequestController>(
+      EvidenceRequestController,
+    );
   });
 
   it('should be defined', () => {

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { EvidenceRequestService } from './evidence-request.service';
 import { CreateEvidenceRequestDto } from './dto/create-evidence-request.dto';
 
@@ -24,6 +24,14 @@ export class EvidenceRequestController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.service.findOne(Number(+id));
+    return this.service.findOne(Number(id));
+  }
+
+  @Patch(':id/status')
+  updateStatus(
+    @Param('id') id: string,
+    @Body() body: { status: 'completed' },
+  ) {
+    return this.service.updateStatus(Number(id), body.status);
   }
 }
