@@ -97,7 +97,7 @@ Do not include explanations, commentary, markdown, or code fences.
     });
   }
 
-  async updateStatus(id: number, status: string) {
+  async updateStatus(id: number, status: 'completed') {
     if (status !== 'completed') {
       throw new BadRequestException('Only "completed" status is supported');
     }

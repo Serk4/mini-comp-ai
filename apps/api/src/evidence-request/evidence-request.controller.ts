@@ -30,7 +30,7 @@ export class EvidenceRequestController {
   @Patch(':id/status')
   updateStatus(
     @Param('id') id: string,
-    @Body() body: { status: string },
+    @Body() body: { status: 'completed' },
   ) {
     return this.service.updateStatus(Number(id), body.status);
   }
